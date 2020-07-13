@@ -60,17 +60,9 @@ jobs:
         with:
           node-version: 12.x
 
-      - name: Install
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-        env:
-          NODE_ENV: production
-
       - name: Deploy
         run: npx semantic-release
         env:
           CI: true
-          GITHUB_TOKEN: ${{ secrets.GITHUB_KEY }}
-          NPM_TOKEN: ${{ secrets.NPM_KEY }}
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
