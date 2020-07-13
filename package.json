@@ -1,0 +1,49 @@
+{
+  "name": "@system76/js-api",
+  "version": "0.0.0-development",
+  "description": "JavaScript fetch wrapper for Elixir Phoenix APIs",
+  "author": "System76 <hosting@system76.com> (https://system76.com)",
+  "license": "GPL-3.0",
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint --ext js,vue --ignore-path .gitignore .",
+    "lint:fix": "eslint --fix --ext js,vue --ignore-path .gitignore .",
+    "test": "ava",
+    "commit": "git-cz"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/system76/js-api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/system76/js-api/issues"
+  },
+  "keywords": [
+    "fetch",
+    "wrapper",
+    "phoenix",
+    "vue",
+    "nuxt"
+  ],
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@system76/eslint-config": "^3.0.0",
+    "ava": "^3.5.1",
+    "commitizen": "^4.0.4",
+    "cz-conventional-changelog": "^3.1.0",
+    "eslint": "^7.4.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
