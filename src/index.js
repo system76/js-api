@@ -1,3 +1,1 @@
-export default function (options) {
-  return options
-}
+export Client from './client'
