@@ -39,11 +39,21 @@
     "ava": "^3.5.1",
     "commitizen": "^4.0.4",
     "cz-conventional-changelog": "^3.1.0",
-    "eslint": "^7.4.0"
+    "eslint": "^7.4.0",
+    "fetch-mock": "^9.10.3",
+    "isomorphic-fetch": "^2.2.1"
+  },
+  "ava": {
+    "require": [
+      "./test/_setup.js"
+    ]
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "lodash": "^4.17.19"
   }
 }
