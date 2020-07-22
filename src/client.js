@@ -26,7 +26,7 @@ async function decodeResponse (response) {
   }
 }
 
-export default class Client {
+export class Client {
   constructor (options) {
     this._baseUrl = new URL(options.baseUrl)
 
@@ -260,7 +260,7 @@ export default class Client {
     }
 
     if (response.ok) {
-      return { data: body }
+      return (this._isJsonApi) ? body : { data: body }
     } else {
       throw new Error(`ApiError: (${response.status}) ${response.statusText}`)
     }

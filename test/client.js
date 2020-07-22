@@ -1,6 +1,6 @@
 import test from 'ava'
 
-import Client from '../src/client.js'
+import { Client } from '../src/client.js'
 
 test.beforeEach((t) => {
   t.context.client = new Client({ baseUrl: 'http://localhost' })

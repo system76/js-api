@@ -1,7 +1,7 @@
 import test from 'ava'
 import fetchMock from 'fetch-mock'
 
-import Client from '../src/client.js'
+import { Client } from '../src/client.js'
 
 const HOST = 'http://example.com'
 
