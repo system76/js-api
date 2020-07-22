@@ -1,12 +1,10 @@
-import camelCase from 'lodash/camelCase.js'
-import isPlainObject from 'lodash/isPlainObject.js'
-import kebabCase from 'lodash/kebabCase.js'
-import lodashSnakeCase from 'lodash/snakeCase.js'
-
-export { camelCase, kebabCase }
+const camelCase = require('lodash/camelCase')
+const isPlainObject = require('lodash/isPlainObject')
+const kebabCase = require('lodash/kebabCase')
+const lodashSnakeCase = require('lodash/snakeCase')
 
 // Fixes converting `testValue23` to `test_value23` instead of `test_value_23`
-export function snakeCase (str) {
+function snakeCase (str) {
   return str
     .split('.')
     .map(lodashSnakeCase)
@@ -14,7 +12,7 @@ export function snakeCase (str) {
     .replace(/_([0-9]+)/igm, '$1')
 }
 
-export function recursive (obj, fn) {
+function recursive (obj, fn) {
   if (isPlainObject(obj) === false) {
     return obj
   }
@@ -36,7 +34,7 @@ export function recursive (obj, fn) {
   return out
 }
 
-export function combinePaths (...paths) {
+function combinePaths (...paths) {
   return paths
     .filter((p) => (p != null))
     .map((p) => p.trim())
@@ -44,3 +42,5 @@ export function combinePaths (...paths) {
     .map((p, i, a) => (i !== a.length - 1) ? p.replace(/[/]+$/, '') : p)
     .join('/')
 }
+
+module.exports = { camelCase, kebabCase, snakeCase, recursive, combinePaths }

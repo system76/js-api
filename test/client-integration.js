@@ -1,7 +1,7 @@
-import test from 'ava'
-import fetchMock from 'fetch-mock'
+const test = require('ava')
+const fetchMock = require('fetch-mock')
 
-import { Client } from '../src/client.js'
+const Client = require('../src/client')
 
 const HOST = 'http://example.com'
 

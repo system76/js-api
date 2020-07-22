@@ -1,1 +1,3 @@
-export { Client } from './client'
+module.exports = {
+  Client: require('./client')
+}

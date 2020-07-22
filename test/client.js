@@ -1,6 +1,6 @@
-import test from 'ava'
+const test = require('ava')
 
-import { Client } from '../src/client.js'
+const Client = require('../src/client')
 
 test.beforeEach((t) => {
   t.context.client = new Client({ baseUrl: 'http://localhost' })
