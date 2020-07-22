@@ -5,8 +5,6 @@
   "author": "System76 <hosting@system76.com> (https://system76.com)",
   "license": "GPL-3.0",
   "main": "src/index.js",
-  "module": "src/index.js",
-  "type": "module",
   "scripts": {
     "lint": "eslint --ext js,vue --ignore-path .gitignore .",
     "lint:fix": "eslint --fix --ext js,vue --ignore-path .gitignore .",

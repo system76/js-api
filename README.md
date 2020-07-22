@@ -60,12 +60,6 @@ Add these fields to your `nuxt.config.js` file:
 
 ```js
 export default {
-  build: {
-    transpile: [
-      '@system76/js-api'
-    ]
-  },
-
   plugins: [
     `~/plugins/api`
   ]
@@ -80,7 +74,7 @@ import { Client } from '@system76/js-api'
 export default function (ctx, inject) {
   const api = new Client({
     baseUrl: 'https://api-v2.system76.com',
-    token: () => ctx.store.getters.token
+    token: () => `Token ${ctx.store.getters.token}`
   })
 
   inject('api', api)

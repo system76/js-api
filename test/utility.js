@@ -1,6 +1,6 @@
-import test from 'ava'
+const test = require('ava')
 
-import * as utility from '../src/utility.js'
+const utility = require('../src/utility')
 
 test('snake case does not seperate numbers from text', (t) => {
   t.is(utility.snakeCase('testValue123'), 'test_value123')

@@ -1,10 +1,10 @@
-import {
+const {
   camelCase,
   combinePaths,
   kebabCase,
   recursive,
   snakeCase
-} from './utility.js'
+} = require('./utility.js')
 
 const JSON_HEADER = 'application/json'
 const JSON_API_HEADER = 'application/vnd.api+json'
@@ -26,7 +26,7 @@ async function decodeResponse (response) {
   }
 }
 
-export class Client {
+module.exports = class Client {
   constructor (options) {
     this._baseUrl = new URL(options.baseUrl)
 
