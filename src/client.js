@@ -236,13 +236,18 @@ module.exports = class Client {
   }
 
   createRequest () {
-    return {
+    const req = {
       method: this._method.toUpperCase(),
       headers: this.createHeaders(),
-      body: this.createBody(),
       cache: (this._cache) ? 'default' : 'no-cache',
       redirect: 'follow'
     }
+
+    if (!['HEAD', 'GET'].includes(req.method)) {
+      req.body = this.createBody()
+    }
+
+    return req
   }
 
   then (resolve, reject) {
