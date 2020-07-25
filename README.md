@@ -46,12 +46,12 @@ npm install --save @system76/js-api
 ```js
 import { Client } from '@system76/js-api'
 
-const api = new Client({
+const api = () => new Client({
   baseUrl: 'https://api-v2.system76.com',
   token: () => 'testingtoken'
 })
 
-const { data } = await api.get('/catalog/products').jsonApi()
+const { data } = await api().get('/catalog/products').jsonApi()
 ```
 
 ### Nuxt
@@ -72,12 +72,12 @@ Put this in your `~/plugins/api.js`:
 import { Client } from '@system76/js-api'
 
 export default function (ctx, inject) {
-  const api = new Client({
+  const api = () => new Client({
     baseUrl: 'https://api-v2.system76.com',
     token: () => `Token ${ctx.store.getters.token}`
   })
 
-  inject('api', api)
+  inject('api', () => api())
 }
 ```
 
@@ -87,7 +87,7 @@ can do:
 ```js
 export default {
   asyncData: async ({ $api }) => ({
-    products: await $api.get('/catalog/products').jsonApi().flatten()
+    products: await $api().get('/catalog/products').jsonApi().flatten()
   })
 }
 ```
@@ -98,7 +98,7 @@ or:
 export default {
   methods: {
     async create () {
-      const { data: products } = await $api.get('/catalog/products')
+      const { data: products } = await $api().get('/catalog/products')
         .jsonApi()
         .page(2)
     }
