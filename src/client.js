@@ -258,6 +258,13 @@ module.exports = class Client {
   }
 
   async parseResponse (response) {
+    const pagination = {
+      page: response.headers.get('page'),
+      perPage: response.headers.get('per-page'),
+      total: response.headers.get('total'),
+      totalPages: response.headers.get('total-pages')
+    }
+
     let body = await decodeResponse(response)
 
     if (body != null && typeof body === 'object') {
@@ -265,7 +272,7 @@ module.exports = class Client {
     }
 
     if (response.ok) {
-      return (this._isJsonApi) ? body : { data: body }
+      return (this._isJsonApi) ? { ...body, pagination } : { data: body, pagination }
     } else {
       throw new Error(`ApiError: (${response.status}) ${response.statusText}`)
     }
