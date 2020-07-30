@@ -259,7 +259,7 @@ module.exports = class Client {
 
   async parseResponse (response) {
     const pagination = {
-      page: Number(response.headers.get('page') || '1'),
+      page: Number(response.headers.get('page-number') || '1'),
       perPage: Number(response.headers.get('per-page') || '1'),
       total: Number(response.headers.get('total') || '1'),
       totalPages: Number(response.headers.get('total-pages') || '1')
