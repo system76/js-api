@@ -81,3 +81,22 @@ test('flatten returns the data on async', async (t) => {
   const res = await t.context.client.get(t.context.path).flatten()
   t.is(res.key, 'value')
 })
+
+test('adds pagination from headers to response', async (t) => {
+  fetchMock.get(t.context.url, {
+    body: {},
+    status: 200,
+    headers: {
+      'page-number': '5',
+      'per-page': '100',
+      total: '1000',
+      'total-pages': '100'
+    }
+  })
+
+  const res = await t.context.client.get(t.context.path)
+  t.is(res.pagination.page, 5)
+  t.is(res.pagination.perPage, 100)
+  t.is(res.pagination.total, 1000)
+  t.is(res.pagination.totalPages, 100)
+})
