@@ -106,6 +106,72 @@ export default {
 }
 ```
 
+### Client
+
+This is your main client used for making requests. All methods return the client
+again, so it's easily chainable.
+
+```js
+// Adds an include statement to the request. Useful for JSON API endpoints
+client.include('products.options.components')
+
+// Adds a header to the request
+client.header('Accept', 'application/json')
+
+// Adds an authentication header
+client.authentication('token abc123')
+
+// Adds a parameter to the URL
+client.parameter('filter[status]', 'awesome')
+
+// Adds pagination page parameter
+client.page(1)
+
+// Adds pagination page size parameter
+client.size(100)
+
+// Adds a no cache or cache header to the request (defaults to true)
+client.cache()
+client.cache(false)
+
+// Adds JSON API headers and changes the request form a bit to match
+client.jsonApi()
+
+// Adds body data to the request. Does not work with HEAD or GET requests. Gets
+// JSON.stringify-ed
+client.body({ data: { attributes: { key: 'value' }}})
+
+// Sets the method and path for the request.
+client.get('/products')
+client.post('/products')
+client.patch('/products')
+client.put('/products')
+client.delete('/products/2')
+
+// Makes the return value of the request _just_ the body data. This is similar
+// to doing `(await client.get()).body` but less verbose
+client.flatten()
+```
+
+### ApiError
+
+This is the error thrown if the response is not ok. It has a bunch of helpers
+to assist in parsing the error data.
+
+```js
+// Mapped for use in Nuxt. If the API returns a 500, your app returns a 500
+error.status // 500
+error.statusCode // 500
+
+// A simple array of error data found
+error.errors // ['Not authorized']
+error.errors // ['email has already been taken']
+
+// An object of validation errors from the server
+error.fields.email // ['has already been taken']
+error.fields.password // null
+```
+
 ## Development
 
 1) Download the repository
