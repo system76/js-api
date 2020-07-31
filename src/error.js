@@ -26,14 +26,13 @@ module.exports = class ApiError extends Error {
   }
 
   get title () {
-    if (Object.keys(this.fields).length !== 0) {
-      const firstField = Object.keys(this.fields)[0]
-      return `${firstField} ${this.fields[firstField][0]}`
+    if (this.errors.length > 0) {
+      return this.errors[0]
     }
 
     switch (this.response.status) {
       case 403:
-        return 'Unauthorized'
+        return 'Not authorized'
 
       case 404:
         return 'Page not found'
@@ -46,6 +45,26 @@ module.exports = class ApiError extends Error {
     }
   }
 
+  get errors () {
+    const out = []
+
+    Object.keys(this.fields).forEach((key) => {
+      this.fields[key].forEach((err) => {
+        out.push(`${key} ${err}`)
+      })
+    })
+
+    if (this.body != null && Array.isArray(this.body.errors)) {
+      this.body.errors.forEach((err) => {
+        if (err.source == null || err.source.pointer == null) {
+          out.push(err.title)
+        }
+      })
+    }
+
+    return out
+  }
+
   get fields () {
     if (this.body == null) {
       return {}
@@ -53,13 +72,15 @@ module.exports = class ApiError extends Error {
       const errors = ((this.body || {}).errors || [])
 
       return errors.reduce((errors, error) => {
-        const field = snakeCase(error.source.pointer.replace('/data/attributes/', ''))
+        if (error.source != null && error.source.pointer != null) {
+          const field = snakeCase(error.source.pointer.replace('/data/attributes/', ''))
 
-        if (errors[field] == null) {
-          errors[field] = []
+          if (errors[field] == null) {
+            errors[field] = []
+          }
+
+          errors[field].push(error.title)
         }
-
-        errors[field].push(error.title)
 
         return errors
       }, {})

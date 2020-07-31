@@ -41,6 +41,35 @@ test('message returns default status text if no body', (t) => {
   t.is(error.message, 'Internal Server Error')
 })
 
+test('errors is an empty array if no body is given', (t) => {
+  const error = new ApiError(t.context.jsonResponse, null)
+  t.deepEqual(error.errors, [])
+})
+
+test('errors includes errors without a source', (t) => {
+  const error = new ApiError(t.context.jsonResponse, {
+    errors: [{
+      title: 'Not authorized'
+    }]
+  })
+
+  t.deepEqual(error.errors, ['Not authorized'])
+})
+
+test('errors flattens field errors', (t) => {
+  const error = new ApiError(t.context.jsonResponse, {
+    errors: [{
+      title: 'has already been taken',
+      detail: 'Email has already been taken',
+      source: {
+        pointer: '/data/attributes/email'
+      }
+    }]
+  })
+
+  t.deepEqual(error.errors, ['email has already been taken'])
+})
+
 test('formErrors maps errors from regular API', (t) => {
   const error = new ApiError(t.context.response, {
     errors: {
@@ -67,6 +96,16 @@ test('formErrors maps all JSON API errors', (t) => {
   t.deepEqual(error.fields, {
     email: ['has already been taken']
   })
+})
+
+test('formErrors does not choke on general errors', (t) => {
+  const error = new ApiError(t.context.jsonResponse, {
+    errors: [{
+      title: 'Not authorized'
+    }]
+  })
+
+  t.deepEqual(error.fields, {})
 })
 
 test('formErrors returns an empty object with no body', (t) => {
