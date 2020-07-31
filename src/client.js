@@ -1,3 +1,4 @@
+const ApiError = require('./error')
 const {
   camelCase,
   combinePaths,
@@ -274,7 +275,7 @@ module.exports = class Client {
     if (response.ok) {
       return (this._isJsonApi) ? { ...body, pagination } : { data: body, pagination }
     } else {
-      throw new Error(`ApiError: (${response.status}) ${response.statusText}`)
+      throw new ApiError(response, body)
     }
   }
 }

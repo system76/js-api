@@ -2,6 +2,7 @@ const test = require('ava')
 const fetchMock = require('fetch-mock')
 
 const Client = require('../src/client')
+const ApiError = require('../src/error')
 
 const HOST = 'http://example.com'
 
@@ -99,4 +100,13 @@ test('adds pagination from headers to response', async (t) => {
   t.is(res.pagination.perPage, 100)
   t.is(res.pagination.total, 1000)
   t.is(res.pagination.totalPages, 100)
+})
+
+test('throws an ApiError with bad response', async (t) => {
+  fetchMock.get(t.context.url, { status: 500 })
+
+  await t.throwsAsync(t.context.client.get(t.context.path), {
+    instanceOf: ApiError,
+    message: 'Internal Server Error'
+  })
 })
