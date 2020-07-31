@@ -12,11 +12,6 @@ module.exports = class ApiError extends Error {
     })
   }
 
-  get isJsonApi () {
-    const contentType = this.response.headers.get('Content-Type')
-    return (contentType === 'application/vnd.api+json')
-  }
-
   get status () {
     return this.response.status
   }
@@ -66,12 +61,11 @@ module.exports = class ApiError extends Error {
   }
 
   get fields () {
-    if (this.body == null) {
-      return {}
-    } else if (this.isJsonApi) {
-      const errors = ((this.body || {}).errors || [])
+    const errors = {}
+    const bodyErrors = (this.body && this.body.errors) ? this.body.errors : []
 
-      return errors.reduce((errors, error) => {
+    if (Array.isArray(bodyErrors)) {
+      bodyErrors.forEach((error) => {
         if (error.source != null && error.source.pointer != null) {
           const field = snakeCase(error.source.pointer.replace('/data/attributes/', ''))
 
@@ -81,13 +75,25 @@ module.exports = class ApiError extends Error {
 
           errors[field].push(error.title)
         }
-
-        return errors
-      }, {})
-    } else if (typeof this.body.errors === 'object' && !Array.isArray(this.body.errors)) {
-      return this.body.errors
-    } else {
-      return {}
+      })
     }
+
+    if (typeof bodyErrors === 'object' && !Array.isArray(bodyErrors)) {
+      Object.keys(bodyErrors).forEach((key) => {
+        const value = bodyErrors[key]
+
+        if (errors[key] == null) {
+          errors[key] = []
+        }
+
+        if (typeof value === 'string') {
+          errors[key] = value
+        } else if (Array.isArray(value)) {
+          value.forEach((v) => errors[key].push(v))
+        }
+      })
+    }
+
+    return errors
   }
 }
