@@ -211,7 +211,10 @@ module.exports = class Client {
 
     if (this._token) {
       const token = (typeof this._token === 'function') ? this._token() : this._token
-      headers.append('authorization', token)
+
+      if (token != null) {
+        headers.append('authorization', token)
+      }
     }
 
     if (this._isJsonApi) {
