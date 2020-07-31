@@ -84,8 +84,10 @@ module.exports = class ApiError extends Error {
 
         return errors
       }, {})
+    } else if (typeof this.body.errors === 'object' && !Array.isArray(this.body.errors)) {
+      return this.body.errors
     } else {
-      return (this.body.errors || {})
+      return {}
     }
   }
 }
