@@ -27,15 +27,14 @@
 
 This package is a simple wrapper around
 [`fetch`](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) to make it
-easier to interact with [Elixir Phoenix](https://phoenixframework.org/) APIs.
+easier to interact with [Elixir Phoenix](https://phoenixframework.org/) APIs. It
+is rather opinionated to System76 projects, but may be useful for other
+projects.
 
 While this package can be used in any JS project, it is designed with Vue (and
 Nuxt.JS) specifically in mind.
 
 ## Using
-
-This package uses ESM modules! You will need to configure your project to
-transpile this package if you are not running a newer version of node.
 
 ### Regular JS
 
