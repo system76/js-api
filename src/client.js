@@ -1,7 +1,9 @@
 const ApiError = require('./error')
+const { normalize } = require('./js-api')
 const {
   camelCase,
   combinePaths,
+  defaultsDeep,
   kebabCase,
   recursive,
   snakeCase
@@ -261,22 +263,40 @@ module.exports = class Client {
       .then(resolve, reject)
   }
 
-  async parseResponse (response) {
-    const pagination = {
-      page: Number(response.headers.get('page-number') || '1'),
-      perPage: Number(response.headers.get('per-page') || '1'),
-      total: Number(response.headers.get('total') || '1'),
-      totalPages: Number(response.headers.get('total-pages') || '1')
+  parseHeaders (response) {
+    return {
+      pagination: {
+        page: Number(response.headers.get('page-number') || '1'),
+        perPage: Number(response.headers.get('per-page') || '1'),
+        total: Number(response.headers.get('total') || '1'),
+        totalPages: Number(response.headers.get('total-pages') || '1')
+      }
     }
+  }
 
+  async parseBody (response) {
+    const headersBody = this.parseHeaders(response)
     let body = await decodeResponse(response)
 
     if (body != null && typeof body === 'object') {
       body = recursive(body, camelCase)
     }
 
+    if (this._isJsonApi) {
+      body.raw = body.data
+      body.data = normalize(body.data, body.included || [], this._includes)
+    }
+
+    return (this._isJsonApi)
+      ? defaultsDeep({}, body, headersBody)
+      : defaultsDeep({}, { data: body }, headersBody)
+  }
+
+  async parseResponse (response) {
+    const body = this.parseBody(response)
+
     if (response.ok) {
-      return (this._isJsonApi) ? { ...body, pagination } : { data: body, pagination }
+      return body
     } else {
       throw new ApiError(response, body)
     }

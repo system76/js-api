@@ -102,6 +102,47 @@ test('adds pagination from headers to response', async (t) => {
   t.is(res.pagination.totalPages, 100)
 })
 
+test('flattens JSON API response', async (t) => {
+  const response = {
+    data: {
+      id: '1',
+      type: 'test',
+      relationships: {
+        nested: {
+          data: {
+            id: '2',
+            type: 'test'
+          }
+        }
+      }
+    },
+    included: [{
+      id: '2',
+      type: 'test'
+    }]
+  }
+
+  fetchMock.get(`${t.context.url}?include=nested`, {
+    body: response,
+    status: 200
+  })
+
+  const res = await t.context.client
+    .get(t.context.path)
+    .include('nested')
+    .jsonApi()
+
+  t.deepEqual(res.raw, response.data)
+  t.deepEqual(res.data, {
+    id: '1',
+    type: 'test',
+    nested: {
+      id: '2',
+      type: 'test'
+    }
+  })
+})
+
 test('throws an ApiError with bad response', async (t) => {
   fetchMock.get(t.context.url, { status: 500 })
 

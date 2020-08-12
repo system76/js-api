@@ -31,3 +31,19 @@ test('combinePaths strips duplicate slashes', (t) => {
 test('combinePaths removes null values', (t) => {
   t.is(utility.combinePaths('/test/', null, '/value/'), '/test/value/')
 })
+
+test('objectNotation converts dots to objects', (t) => {
+  t.deepEqual(utility.objectNotation(['a.b.c', 'a.f.g', 'a.b.e.l']), {
+    a: {
+      b: {
+        c: {},
+        e: {
+          l: {}
+        }
+      },
+      f: {
+        g: {}
+      }
+    }
+  })
+})
