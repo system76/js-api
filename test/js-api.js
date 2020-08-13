@@ -109,3 +109,55 @@ test('includes deeply nested includes', (t) => {
     }
   })
 })
+
+test('normalizes top level arrays', (t) => {
+  const input = [{
+    id: '1',
+    type: 'test',
+    relationships: {
+      three: {
+        data: [{
+          id: '3',
+          type: 'test'
+        }]
+      }
+    }
+  }, {
+    id: '2',
+    type: 'test',
+    relationships: {
+      three: {
+        data: [{
+          id: '3',
+          type: 'test'
+        }]
+      }
+    }
+  }]
+
+  const includes = [{
+    id: '3',
+    type: 'test',
+    attributes: {
+      key: 'value'
+    }
+  }]
+
+  t.deepEqual(normalize(input, includes, ['three']), [{
+    id: '1',
+    type: 'test',
+    three: [{
+      id: '3',
+      type: 'test',
+      key: 'value'
+    }]
+  }, {
+    id: '2',
+    type: 'test',
+    three: [{
+      id: '3',
+      type: 'test',
+      key: 'value'
+    }]
+  }])
+})
