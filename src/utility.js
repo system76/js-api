@@ -1,6 +1,9 @@
 const camelCase = require('lodash/camelCase')
+const defaultsDeep = require('lodash/defaultsDeep')
+const get = require('lodash/get')
 const isPlainObject = require('lodash/isPlainObject')
 const kebabCase = require('lodash/kebabCase')
+const set = require('lodash/set')
 const lodashSnakeCase = require('lodash/snakeCase')
 
 // Fixes converting `testValue23` to `test_value23` instead of `test_value_23`
@@ -43,4 +46,23 @@ function combinePaths (...paths) {
     .join('/')
 }
 
-module.exports = { camelCase, kebabCase, snakeCase, recursive, combinePaths }
+function objectNotation (dots = []) {
+  return dots.reduce((obj, dot) => {
+    if (get(obj, dot) == null) {
+      set(obj, dot, {})
+    }
+
+    return obj
+  }, {})
+}
+
+module.exports = {
+  camelCase,
+  get,
+  defaultsDeep,
+  kebabCase,
+  snakeCase,
+  recursive,
+  combinePaths,
+  objectNotation
+}
