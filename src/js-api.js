@@ -5,6 +5,10 @@ function normalize (data, included = [], includes = {}) {
     includes = objectNotation(includes)
   }
 
+  if (data != null && Array.isArray(data)) {
+    return data.map((d) => normalize(d, included, includes))
+  }
+
   const out = {
     id: data.id,
     type: data.type,

@@ -104,43 +104,98 @@ test('adds pagination from headers to response', async (t) => {
 
 test('flattens JSON API response', async (t) => {
   const response = {
-    data: {
-      id: '1',
-      type: 'test',
+    included: [{
+      type: 'accounts-user',
+      id: '123',
+      attributes: {
+        'tax-exempt': false,
+        'stripe-id': 'cus_XXX',
+        'phone-number': '1234567890',
+        newsletter: true,
+        'last-name': 'User',
+        'first-name': 'Test',
+        email: 'test@example.com',
+        'company-name': null,
+        'account-type': 'individual'
+      }
+    }],
+    data: [{
+      type: 'fulfillment-order-note',
       relationships: {
-        nested: {
+        user: {
           data: {
-            id: '2',
-            type: 'test'
+            type: 'accounts-user',
+            id: '123'
           }
         }
+      },
+      id: '1',
+      attributes: {
+        note: 'testing notes!'
       }
-    },
-    included: [{
+    }, {
+      type: 'fulfillment-order-note',
+      relationships: {
+        user: {
+          data: {
+            type: 'accounts-user',
+            id: '123'
+          }
+        }
+      },
       id: '2',
-      type: 'test'
+      attributes: {
+        note: 'more!!!!!'
+      }
     }]
   }
 
-  fetchMock.get(`${t.context.url}?include=nested`, {
+  fetchMock.get(`${t.context.url}?include=user`, {
     body: response,
     status: 200
   })
 
   const res = await t.context.client
     .get(t.context.path)
-    .include('nested')
+    .include('user')
     .jsonApi()
 
   t.deepEqual(res.raw, response.data)
-  t.deepEqual(res.data, {
+  t.deepEqual(res.data, [{
     id: '1',
-    type: 'test',
-    nested: {
-      id: '2',
-      type: 'test'
+    type: 'fulfillment-order-note',
+    note: 'testing notes!',
+    user: {
+      type: 'accounts-user',
+      id: '123',
+      taxExempt: false,
+      stripeId: 'cus_XXX',
+      phoneNumber: '1234567890',
+      newsletter: true,
+      lastName: 'User',
+      firstName: 'Test',
+      email: 'test@example.com',
+      companyName: null,
+      accountType: 'individual'
     }
-  })
+  }, {
+    id: '2',
+    type: 'fulfillment-order-note',
+    note: 'more!!!!!',
+    user: {
+      type: 'accounts-user',
+      id: '123',
+      taxExempt: false,
+      stripeId: 'cus_XXX',
+      phoneNumber: '1234567890',
+      newsletter: true,
+      lastName: 'User',
+      firstName: 'Test',
+      email: 'test@example.com',
+      companyName: null,
+      accountType: 'individual'
+    }
+  }])
 })
 
 test('throws an ApiError with bad response', async (t) => {
