@@ -1,6 +1,10 @@
 const { get, objectNotation } = require('./utility')
 
 function normalize (data, included = [], includes = {}) {
+  if (data == null) {
+    return null
+  }
+
   if (includes != null && Array.isArray(includes)) {
     includes = objectNotation(includes)
   }
@@ -33,10 +37,12 @@ function normalize (data, included = [], includes = {}) {
   return out
 }
 
-function findRelationship ({ id, type }, included) {
-  return included.find((record) => {
-    return (record.id === id && record.type === type)
-  })
+function findRelationship (relationship, included) {
+  if (relationship != null) {
+    return included.find((record) => {
+      return (record.id === relationship.id && record.type === relationship.type)
+    })
+  }
 }
 
 module.exports = { normalize }
