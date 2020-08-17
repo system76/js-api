@@ -41,8 +41,8 @@ test('200 with no body returns null data', async (t) => {
 
 test('200 with empty body returns null data', async (t) => {
   fetchMock.get(t.context.url, {
-    body: ''
-    stats: 200
+    body: '',
+    status: 200
   })
 
   const res = await t.context.client.get(t.context.path)
