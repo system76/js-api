@@ -58,7 +58,7 @@ test('200 with empty body and json api headers returns null data', async (t) => 
     }
   })
 
-  const res = await t.context.client.get(t.context.path)
+  const res = await t.context.client.get(t.context.path).jsonApi()
   t.is(res.data, null)
 })
 

@@ -282,12 +282,12 @@ module.exports = class Client {
       body = recursive(body, camelCase)
     }
 
-    if (this._isJsonApi) {
+    if (this._isJsonApi && body != null) {
       body.raw = body.data
       body.data = normalize(body.data, body.included || [], this._includes)
     }
 
-    return (this._isJsonApi)
+    return (this._isJsonApi && body != null)
       ? defaultsDeep({}, body, headersBody)
       : defaultsDeep({}, { data: body }, headersBody)
   }
