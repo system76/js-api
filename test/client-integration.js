@@ -27,39 +27,35 @@ test('token option can be a function to get resolved', async (t) => {
   await t.notThrowsAsync(() => client.get(t.context.path))
 })
 
-test('202 status codes return null data', async (t) => {
+test('202 status codes returns empty data', async (t) => {
   fetchMock.get(t.context.url, 202)
   const res = await t.context.client.get(t.context.path)
-  t.is(res.data, null)
+  t.is(res.data, '')
 })
 
-test('200 with no body returns null data', async (t) => {
+test('200 with no body returns empty data', async (t) => {
   fetchMock.get(t.context.url, 200)
   const res = await t.context.client.get(t.context.path)
-  t.is(res.data, null)
+  t.is(res.data, '')
 })
 
-test('200 with empty body returns null data', async (t) => {
+test('200 with empty body returns empty data', async (t) => {
   fetchMock.get(t.context.url, {
     body: '',
     status: 200
   })
 
   const res = await t.context.client.get(t.context.path)
-  t.is(res.data, null)
+  t.is(res.data, '')
 })
 
-test('200 with empty body and json api headers returns null data', async (t) => {
+test('204 with empty body and json api headers returns empty data', async (t) => {
   fetchMock.get(t.context.url, {
-    body: '',
-    status: 200,
-    headers: {
-      'content-type': 'application/vnd.api+json'
-    }
+    status: 204
   })
 
   const res = await t.context.client.get(t.context.path).jsonApi()
-  t.is(res.data, null)
+  t.is(res.data, '')
 })
 
 test('200 returns text for non json responses', async (t) => {
@@ -175,6 +171,9 @@ test('flattens JSON API response', async (t) => {
 
   fetchMock.get(`${t.context.url}?include=user`, {
     body: response,
+    headers: {
+      'content-type': 'application/vnd.api+json'
+    },
     status: 200
   })
 

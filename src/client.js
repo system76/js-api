@@ -20,8 +20,8 @@ async function decodeResponse (response) {
     contentType.includes(JSON_API_HEADER)
   )
 
-  if (response.body == null || response.body === '') {
-    return null
+  if (response.body == null || [204].includes(response.status)) {
+    return ''
   } else if (isJson) {
     return response.json()
   } else {
@@ -282,12 +282,18 @@ module.exports = class Client {
       body = recursive(body, camelCase)
     }
 
-    if (this._isJsonApi && body != null) {
+    const contentType = response.headers.get('content-type') || []
+    const isJsonApi = (
+      contentType.includes(JSON_API_HEADER) &&
+      typeof body === 'object'
+    )
+
+    if (isJsonApi) {
       body.raw = body.data
       body.data = normalize(body.data, body.included || [], this._includes)
     }
 
-    return (this._isJsonApi && body != null)
+    return (isJsonApi)
       ? defaultsDeep({}, body, headersBody)
       : defaultsDeep({}, { data: body }, headersBody)
   }
