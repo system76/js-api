@@ -20,12 +20,12 @@ async function decodeResponse (response) {
     contentType.includes(JSON_API_HEADER)
   )
 
-  if (isJson) {
-    return response.json()
-  } else if (response.body != null && response.body !== '') {
-    return response.text()
-  } else {
+  if (response.body == null || response.body === '') {
     return null
+  } else if (isJson) {
+    return response.json()
+  } else {
+    return response.text()
   }
 }
 

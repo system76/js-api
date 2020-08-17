@@ -49,6 +49,19 @@ test('200 with empty body returns null data', async (t) => {
   t.is(res.data, null)
 })
 
+test('200 with empty body and json api headers returns null data', async (t) => {
+  fetchMock.get(t.context.url, {
+    body: '',
+    status: 200,
+    headers: {
+      'content-type': 'application/vnd.api+json'
+    }
+  })
+
+  const res = await t.context.client.get(t.context.path)
+  t.is(res.data, null)
+})
+
 test('200 returns text for non json responses', async (t) => {
   fetchMock.get(t.context.url, {
     body: 'test',
