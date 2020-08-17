@@ -27,16 +27,16 @@ test('token option can be a function to get resolved', async (t) => {
   await t.notThrowsAsync(() => client.get(t.context.path))
 })
 
-test('202 status codes returns empty data', async (t) => {
+test('202 status codes returns null data', async (t) => {
   fetchMock.get(t.context.url, 202)
   const res = await t.context.client.get(t.context.path)
-  t.is(res.data, '')
+  t.is(res.data, null)
 })
 
-test('200 with no body returns empty data', async (t) => {
+test('200 with no body returns null data', async (t) => {
   fetchMock.get(t.context.url, 200)
   const res = await t.context.client.get(t.context.path)
-  t.is(res.data, '')
+  t.is(res.data, null)
 })
 
 test('200 with empty body returns empty data', async (t) => {
@@ -49,13 +49,13 @@ test('200 with empty body returns empty data', async (t) => {
   t.is(res.data, '')
 })
 
-test('204 with empty body and json api headers returns empty data', async (t) => {
+test('204 with empty body and json api headers returns null data', async (t) => {
   fetchMock.get(t.context.url, {
     status: 204
   })
 
   const res = await t.context.client.get(t.context.path).jsonApi()
-  t.is(res.data, '')
+  t.is(res.data, null)
 })
 
 test('200 returns text for non json responses', async (t) => {

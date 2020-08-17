@@ -21,7 +21,7 @@ async function decodeResponse (response) {
   )
 
   if (response.body == null || [204].includes(response.status)) {
-    return ''
+    return null
   } else if (isJson) {
     return response.json()
   } else {
