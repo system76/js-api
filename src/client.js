@@ -22,7 +22,7 @@ async function decodeResponse (response) {
 
   if (isJson) {
     return response.json()
-  } else if (response.body != null) {
+  } else if (response.body != null && response.body !== '') {
     return response.text()
   } else {
     return null
