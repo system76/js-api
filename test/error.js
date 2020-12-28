@@ -56,6 +56,17 @@ test('errors includes errors without a source', (t) => {
   t.deepEqual(error.errors, ['Not authorized'])
 })
 
+test('errors includes errors from a default phoenix project', (t) => {
+  const error = new ApiError(t.context.jsonResponse, {
+    errors: {
+      detail: 'Unauthorized'
+    }
+  })
+
+  t.deepEqual(error.fields, {})
+  t.deepEqual(error.errors, ['Unauthorized'])
+})
+
 test('errors flattens field errors', (t) => {
   const error = new ApiError(t.context.jsonResponse, {
     errors: [{

@@ -49,12 +49,18 @@ module.exports = class ApiError extends Error {
       })
     })
 
-    if (this.body != null && Array.isArray(this.body.errors)) {
-      this.body.errors.forEach((err) => {
-        if (err.source == null || err.source.pointer == null) {
-          out.push(err.title)
+    if (this.body != null) {
+      if (Array.isArray(this.body.errors)) {
+        this.body.errors.forEach((err) => {
+          if (err.source == null || err.source.pointer == null) {
+            out.push(err.title)
+          }
+        })
+      } else if (typeof this.body.errors === 'object') {
+        if (Object.keys(this.body.errors)[0] === 'detail') {
+          out.push(this.body.errors.detail)
         }
-      })
+      }
     }
 
     return out
@@ -79,19 +85,23 @@ module.exports = class ApiError extends Error {
     }
 
     if (typeof bodyErrors === 'object' && !Array.isArray(bodyErrors)) {
-      Object.keys(bodyErrors).forEach((key) => {
-        const value = bodyErrors[key]
+      // Default phoenix generates an object with just a `detail` field. It's
+      // not an error field, just a generic error.
+      if (Object.keys(bodyErrors)[0] !== 'detail') {
+        Object.keys(bodyErrors).forEach((key) => {
+          const value = bodyErrors[key]
 
-        if (errors[key] == null) {
-          errors[key] = []
-        }
+          if (errors[key] == null) {
+            errors[key] = []
+          }
 
-        if (typeof value === 'string') {
-          errors[key] = value
-        } else if (Array.isArray(value)) {
-          value.forEach((v) => errors[key].push(v))
-        }
-      })
+          if (typeof value === 'string') {
+            errors[key] = value
+          } else if (Array.isArray(value)) {
+            value.forEach((v) => errors[key].push(v))
+          }
+        })
+      }
     }
 
     return errors
