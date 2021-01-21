@@ -283,12 +283,9 @@ module.exports = class Client {
     }
 
     const contentType = response.headers.get('content-type') || []
-    const isJsonApi = (
-      contentType.includes(JSON_API_HEADER) &&
-      typeof body === 'object'
-    )
+    const isJsonApi = contentType.includes(JSON_API_HEADER)
 
-    if (isJsonApi) {
+    if (isJsonApi && body !== null) {
       body.raw = body.data
       body.data = normalize(body.data, body.included || [], this._includes)
     }
