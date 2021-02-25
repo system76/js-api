@@ -228,3 +228,28 @@ test('throws an ApiError with bad response', async (t) => {
     message: 'Internal Server Error'
   })
 })
+
+test.only('throws an ApiError with default elixir error response', async (t) => {
+  fetchMock.post({ url: t.context.url }, {
+    status: 400,
+    headers: {
+      'content-type': 'application/json; charset=utf-8'
+    },
+    body: {
+      errors: {
+        email: ["has already been taken"]
+      }
+    }
+  })
+
+  const client = new Client({ baseUrl: HOST })
+
+  const error = await t.throwsAsync(client.post(t.context.path), {
+    instanceOf: ApiError
+  })
+
+  t.is(error.message, 'email has already been taken')
+  t.deepEqual(error.fields, {
+    email: ['has already been taken']
+  })
+})
