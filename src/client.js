@@ -291,7 +291,7 @@ module.exports = class Client {
     }
 
     return (isJsonApi)
-      ? { data: defaultsDeep({}, body, headersBody) }
+      ? defaultsDeep({}, body, headersBody)
       : defaultsDeep({}, { data: body }, headersBody)
   }
 
@@ -299,7 +299,7 @@ module.exports = class Client {
     const body = await this.parseBody(response)
 
     if (response.ok) {
-      return body.data
+      return body
     } else {
       throw new ApiError(response, body.data)
     }
