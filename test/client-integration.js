@@ -229,7 +229,7 @@ test('throws an ApiError with bad response', async (t) => {
   })
 })
 
-test.only('throws an ApiError with default elixir error response', async (t) => {
+test('throws an ApiError with default elixir error response', async (t) => {
   fetchMock.post({ url: t.context.url }, {
     status: 400,
     headers: {
@@ -237,7 +237,7 @@ test.only('throws an ApiError with default elixir error response', async (t) => 
     },
     body: {
       errors: {
-        email: ["has already been taken"]
+        email: ['has already been taken']
       }
     }
   })
