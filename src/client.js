@@ -296,12 +296,12 @@ module.exports = class Client {
   }
 
   async parseResponse (response) {
-    const body = this.parseBody(response)
+    const body = await this.parseBody(response)
 
     if (response.ok) {
       return body
     } else {
-      throw new ApiError(response, body)
+      throw new ApiError(response, body.data)
     }
   }
 }
