@@ -36,7 +36,7 @@ module.exports = class Client {
     this._method = 'GET'
     this._path = '/'
 
-    this._disableCase = false
+    this._bodyCasing = true
     this._cache = true
     this._isJsonApi = false
     this._token = options.token
@@ -157,8 +157,8 @@ module.exports = class Client {
     return this
   }
 
-  disableCase (value = true) {
-    this._disableCase = value
+  bodyCasing (value = true) {
+    this._bodyCasing = value
 
     return this
   }
@@ -238,7 +238,7 @@ module.exports = class Client {
     if (this._body == null) {
       return null
     } else if (typeof this._body === 'object') {
-      if (this._disableCase) {
+      if (!this._bodyCasing) {
         return JSON.stringify(this._body)
       } else {
         if (this._isJsonApi) {
