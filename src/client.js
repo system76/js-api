@@ -36,6 +36,7 @@ module.exports = class Client {
     this._method = 'GET'
     this._path = '/'
 
+    this._disableCase = false
     this._cache = true
     this._isJsonApi = false
     this._token = options.token
@@ -156,6 +157,12 @@ module.exports = class Client {
     return this
   }
 
+  disableCase (value = true) {
+    this._disableCase = value
+
+    return this
+  }
+
   createIncludes () {
     const params = new URLSearchParams()
 
@@ -231,10 +238,14 @@ module.exports = class Client {
     if (this._body == null) {
       return null
     } else if (typeof this._body === 'object') {
-      if (this._isJsonApi) {
-        return JSON.stringify(recursive(this._body, kebabCase))
+      if (this._disableCase) {
+        return JSON.stringify(this._body)
       } else {
-        return JSON.stringify(recursive(this._body, snakeCase))
+        if (this._isJsonApi) {
+          return JSON.stringify(recursive(this._body, kebabCase))
+        } else {
+          return JSON.stringify(recursive(this._body, snakeCase))
+        }
       }
     } else {
       return this._body
