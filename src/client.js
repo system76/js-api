@@ -81,10 +81,16 @@ module.exports = class Client {
   parameter (key, value) {
     if (value === undefined) {
       delete this._parameters[key]
-    } else if (value === null) {
-      this._parameters[key] = ''
     } else {
-      this._parameters[key] = value
+      if (this._parameters[key] == null) {
+        this._parameters[key] = []
+      }
+
+      if (value === null) {
+        this._parameters[key].push('')
+      } else {
+        this._parameters[key].push(value)
+      }
     }
 
     return this
@@ -186,7 +192,9 @@ module.exports = class Client {
     const params = new URLSearchParams()
 
     Object.keys(this._parameters).forEach((key) => {
-      params.set(key, this._parameters[key])
+      this._parameters[key].forEach((value) => {
+        params.append(key, value)
+      })
     })
 
     return params
@@ -201,13 +209,13 @@ module.exports = class Client {
 
     if (this._includes.length > 0) {
       for (var [ik, iv] of this.createIncludes().entries()) {
-        params.set(ik, iv)
+        params.append(ik, iv)
       }
     }
 
     if (Object.keys(this._parameters).length > 0) {
       for (var [pk, pv] of this.createParameters().entries()) {
-        params.set(pk, pv)
+        params.append(pk, pv)
       }
     }
 

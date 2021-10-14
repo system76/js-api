@@ -50,9 +50,9 @@ test('authentication sets the token value', (t) => {
 
 test('parameter sets parameters parameters', (t) => {
   t.context.client.parameter('testing[value]', 'test')
-  t.is(t.context.client.createParameters().get('testing[value]'), 'test')
+  t.true(t.context.client.createParameters().getAll('testing[value]').includes('test'))
   t.context.client.parameter('testing[value]', null)
-  t.is(t.context.client.createParameters().get('testing[value]'), '')
+  t.true(t.context.client.createParameters().getAll('testing[value]').includes(''))
   t.context.client.parameter('testing[value]', undefined)
   t.is(t.context.client.createParameters().get('testing[value]'), null)
 })
